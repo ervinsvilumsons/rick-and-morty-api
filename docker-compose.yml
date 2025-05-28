@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: ${APP_NAME}-postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - rick-and-morty
+  
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: ${APP_NAME}-workspace
+    working_dir: /var/www/html
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}          
+    volumes:
+      - .:/var/www/html
+    networks:
+      - rick-and-morty
+    command: sh -c "chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && php-fpm"
+  
+  nginx:
+    image: nginx:stable-alpine
+    container_name: ${APP_NAME}-nginx
+    ports:
+      - "9003:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - rick-and-morty
+
+networks:
+  rick-and-morty:
+
+volumes:
+  pgdata:
