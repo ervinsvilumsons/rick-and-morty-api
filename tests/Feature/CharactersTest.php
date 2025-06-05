@@ -10,6 +10,9 @@ class CharactersTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * @return void
+     */
     public function test_the_application_returns_characters(): void
     {
         Character::factory()->count(20)->create();
@@ -19,6 +22,9 @@ class CharactersTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @return void
+     */
     public function test_the_application_returns_filter_name(): void
     {
         $data = ['name' => 'Alien'];
@@ -29,6 +35,9 @@ class CharactersTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @return void
+     */
     public function test_the_application_returns_filter_status(): void
     {
         $data = ['status' => 'unknown'];
@@ -39,6 +48,9 @@ class CharactersTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @return void
+     */
     public function test_the_application_returns_character(): void
     {
         $character = Character::factory()->create();
@@ -47,6 +59,9 @@ class CharactersTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @return void
+     */
     public function test_the_application_returns_character_not_found(): void
     {
         $this->get('/api/characters/1')

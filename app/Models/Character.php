@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,12 +28,12 @@ class Character extends Model
     /**
      * Filter characters by column.
      * 
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param string $column
      * @param string|null $term
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
-    public function scopeSearchBy(\Illuminate\Database\Eloquent\Builder $query, string $column, ?string $term): \Illuminate\Database\Eloquent\Builder
+    public function scopeSearchBy(Builder $query, string $column, ?string $term): Builder
     {
         $allowedColumns = [
             'name', 
