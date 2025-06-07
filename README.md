@@ -10,5 +10,5 @@ docker-compose up -d --build
 ## Tests
 ```
 docker exec -it rick-and-morty-workspace /bin/bash
-vendor/bin/phpunit --coverage-html /coverage
+vendor/bin/phpunit --coverage-html coverage
 ```
