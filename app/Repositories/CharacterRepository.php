@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Character;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CharacterRepository implements CharacterRepositoryInterface
@@ -15,11 +16,16 @@ class CharacterRepository implements CharacterRepositoryInterface
     public function all(): LengthAwarePaginator
     {
         $perPage = min((int) (request()->query('per_page')) ?? 15, 200);
-        $name = request()->query('name');
-        $status = request()->query('status');
+        $queryParams = request()->query();
 
-        return Character::searchBy('name', $name)
-            ->searchBy('status', $status)
+        return Character::when(!empty($queryParams), function (Builder $query) use ($queryParams) {
+                foreach($queryParams as $key => $value) {
+                    if (in_array($key, Character::FILTER_COLUMNS)) {
+                        $query
+                            ->searchBy($key, $value);
+                    }
+                }
+            })
             ->paginate($perPage);
     }
 }

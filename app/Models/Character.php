@@ -25,6 +25,14 @@ class Character extends Model
         'url',
     ];
 
+    const FILTER_COLUMNS = [
+        'name', 
+        'status', 
+        'species', 
+        'type',
+        'gender',
+    ];
+
     /**
      * Filter characters by column.
      * 
@@ -35,18 +43,7 @@ class Character extends Model
      */
     public function scopeSearchBy(Builder $query, string $column, ?string $term): Builder
     {
-        $allowedColumns = [
-            'name', 
-            'status', 
-            'species', 
-            'type',
-            'gender',
-        ];
         $term = strtolower(trim($term));
-
-        if (!in_array($column, $allowedColumns)) {
-            return $query;
-        }
 
         return $query
             ->when($term && $term !== '', function ($query) use ($column, $term) {

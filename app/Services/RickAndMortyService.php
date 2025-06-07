@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class RickAndMortyService
 {
@@ -10,12 +11,20 @@ class RickAndMortyService
 
     const BASE_URL = 'https://rickandmortyapi.com/api/';
 
-    public function __construct()
+    /**
+     * @param $config
+     */
+    public function __construct(array $config = [])
     {
-        $this->client = new Client([
-            'base_uri' => self::BASE_URL,
-            'timeout'  => 5.0,
-        ]);
+        $this->client = new Client(
+            array_merge(
+                [
+                    'base_uri' => self::BASE_URL,
+                    'timeout'  => 2.0,
+                ], 
+                $config
+            )
+        );
     }
 
     /**
@@ -28,16 +37,19 @@ class RickAndMortyService
     private function getData(string $url, array $query = ['page' => 1])
     {
         try {
-            $response = $this->client->get($url, [
-                'query' => $query,
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]);
+            $response = $this->client->get(
+                $url, 
+                [
+                    'query' => $query,
+                    'headers' => [
+                        'Accept' => 'application/json',
+                    ],
+                ]
+            );
 
             return json_decode($response->getBody(), true);
 
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+        } catch (RequestException $e) {
             return ['error' => $e->getMessage()];
         }
     }
