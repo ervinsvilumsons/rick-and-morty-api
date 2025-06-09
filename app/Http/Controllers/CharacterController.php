@@ -28,7 +28,7 @@ class CharacterController extends Controller
     }
 
     /**
-     * @property Character $character
+     * @param Character $character
      * @return CharacterResource
      */
     public function show(Character $character): CharacterResource
